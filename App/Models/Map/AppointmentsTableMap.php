@@ -97,9 +97,9 @@ class AppointmentsTableMap extends TableMap
     const COL_CREATED_AT = 'appointments.created_at';
 
     /**
-     * the column name for the upated_at field
+     * the column name for the updated_at field
      */
-    const COL_UPATED_AT = 'appointments.upated_at';
+    const COL_UPDATED_AT = 'appointments.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -113,10 +113,10 @@ class AppointmentsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('AppointmentId', 'UserId', 'AppointmentDateTime', 'AppointmentDetails', 'CreatedAt', 'UpatedAt', ),
-        self::TYPE_CAMELNAME     => array('appointmentId', 'userId', 'appointmentDateTime', 'appointmentDetails', 'createdAt', 'upatedAt', ),
-        self::TYPE_COLNAME       => array(AppointmentsTableMap::COL_APPOINTMENT_ID, AppointmentsTableMap::COL_USER_ID, AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME, AppointmentsTableMap::COL_APPOINTMENT_DETAILS, AppointmentsTableMap::COL_CREATED_AT, AppointmentsTableMap::COL_UPATED_AT, ),
-        self::TYPE_FIELDNAME     => array('appointment_id', 'user_id', 'appointment_date_time', 'appointment_details', 'created_at', 'upated_at', ),
+        self::TYPE_PHPNAME       => array('AppointmentId', 'UserId', 'AppointmentDateTime', 'AppointmentDetails', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('appointmentId', 'userId', 'appointmentDateTime', 'appointmentDetails', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(AppointmentsTableMap::COL_APPOINTMENT_ID, AppointmentsTableMap::COL_USER_ID, AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME, AppointmentsTableMap::COL_APPOINTMENT_DETAILS, AppointmentsTableMap::COL_CREATED_AT, AppointmentsTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('appointment_id', 'user_id', 'appointment_date_time', 'appointment_details', 'created_at', 'updated_at', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
@@ -127,10 +127,10 @@ class AppointmentsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('AppointmentId' => 0, 'UserId' => 1, 'AppointmentDateTime' => 2, 'AppointmentDetails' => 3, 'CreatedAt' => 4, 'UpatedAt' => 5, ),
-        self::TYPE_CAMELNAME     => array('appointmentId' => 0, 'userId' => 1, 'appointmentDateTime' => 2, 'appointmentDetails' => 3, 'createdAt' => 4, 'upatedAt' => 5, ),
-        self::TYPE_COLNAME       => array(AppointmentsTableMap::COL_APPOINTMENT_ID => 0, AppointmentsTableMap::COL_USER_ID => 1, AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME => 2, AppointmentsTableMap::COL_APPOINTMENT_DETAILS => 3, AppointmentsTableMap::COL_CREATED_AT => 4, AppointmentsTableMap::COL_UPATED_AT => 5, ),
-        self::TYPE_FIELDNAME     => array('appointment_id' => 0, 'user_id' => 1, 'appointment_date_time' => 2, 'appointment_details' => 3, 'created_at' => 4, 'upated_at' => 5, ),
+        self::TYPE_PHPNAME       => array('AppointmentId' => 0, 'UserId' => 1, 'AppointmentDateTime' => 2, 'AppointmentDetails' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
+        self::TYPE_CAMELNAME     => array('appointmentId' => 0, 'userId' => 1, 'appointmentDateTime' => 2, 'appointmentDetails' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
+        self::TYPE_COLNAME       => array(AppointmentsTableMap::COL_APPOINTMENT_ID => 0, AppointmentsTableMap::COL_USER_ID => 1, AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME => 2, AppointmentsTableMap::COL_APPOINTMENT_DETAILS => 3, AppointmentsTableMap::COL_CREATED_AT => 4, AppointmentsTableMap::COL_UPDATED_AT => 5, ),
+        self::TYPE_FIELDNAME     => array('appointment_id' => 0, 'user_id' => 1, 'appointment_date_time' => 2, 'appointment_details' => 3, 'created_at' => 4, 'updated_at' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
@@ -154,9 +154,9 @@ class AppointmentsTableMap extends TableMap
         $this->addPrimaryKey('appointment_id', 'AppointmentId', 'INTEGER', true, null, null);
         $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'users', 'user_id', true, null, null);
         $this->addColumn('appointment_date_time', 'AppointmentDateTime', 'VARCHAR', true, 255, null);
-        $this->addColumn('appointment_details', 'AppointmentDetails', 'VARCHAR', true, 255, null);
+        $this->addColumn('appointment_details', 'AppointmentDetails', 'VARCHAR', false, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', true, null, null);
-        $this->addColumn('upated_at', 'UpatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -319,14 +319,14 @@ class AppointmentsTableMap extends TableMap
             $criteria->addSelectColumn(AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME);
             $criteria->addSelectColumn(AppointmentsTableMap::COL_APPOINTMENT_DETAILS);
             $criteria->addSelectColumn(AppointmentsTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(AppointmentsTableMap::COL_UPATED_AT);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.appointment_id');
             $criteria->addSelectColumn($alias . '.user_id');
             $criteria->addSelectColumn($alias . '.appointment_date_time');
             $criteria->addSelectColumn($alias . '.appointment_details');
             $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.upated_at');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 

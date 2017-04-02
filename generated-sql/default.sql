@@ -30,9 +30,9 @@ CREATE TABLE `appointments`
     `appointment_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `appointment_date_time` VARCHAR(255) NOT NULL,
-    `appointment_details` VARCHAR(255) NOT NULL,
+    `appointment_details` VARCHAR(255),
     `created_at` DATETIME NOT NULL,
-    `upated_at` DATETIME,
+    `updated_at` DATETIME,
     PRIMARY KEY (`appointment_id`),
     INDEX `appointments_fi_72218f` (`user_id`),
     CONSTRAINT `appointments_fk_72218f`

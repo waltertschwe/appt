@@ -99,11 +99,11 @@ abstract class Appointments implements ActiveRecordInterface
     protected $created_at;
 
     /**
-     * The value for the upated_at field.
+     * The value for the updated_at field.
      *
      * @var        DateTime
      */
-    protected $upated_at;
+    protected $updated_at;
 
     /**
      * @var        ChildUser
@@ -404,7 +404,7 @@ abstract class Appointments implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [upated_at] column value.
+     * Get the [optionally formatted] temporal [updated_at] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -414,12 +414,12 @@ abstract class Appointments implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getUpatedAt($format = NULL)
+    public function getUpdatedAt($format = NULL)
     {
         if ($format === null) {
-            return $this->upated_at;
+            return $this->updated_at;
         } else {
-            return $this->upated_at instanceof \DateTimeInterface ? $this->upated_at->format($format) : null;
+            return $this->updated_at instanceof \DateTimeInterface ? $this->updated_at->format($format) : null;
         }
     }
 
@@ -528,24 +528,24 @@ abstract class Appointments implements ActiveRecordInterface
     } // setCreatedAt()
 
     /**
-     * Sets the value of [upated_at] column to a normalized version of the date/time value specified.
+     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
      * @return $this|\App\Models\Appointments The current object (for fluent API support)
      */
-    public function setUpatedAt($v)
+    public function setUpdatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->upated_at !== null || $dt !== null) {
-            if ($this->upated_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->upated_at->format("Y-m-d H:i:s.u")) {
-                $this->upated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[AppointmentsTableMap::COL_UPATED_AT] = true;
+        if ($this->updated_at !== null || $dt !== null) {
+            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->updated_at->format("Y-m-d H:i:s.u")) {
+                $this->updated_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[AppointmentsTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setUpatedAt()
+    } // setUpdatedAt()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -601,11 +601,11 @@ abstract class Appointments implements ActiveRecordInterface
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AppointmentsTableMap::translateFieldName('UpatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AppointmentsTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->upated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -846,8 +846,8 @@ abstract class Appointments implements ActiveRecordInterface
         if ($this->isColumnModified(AppointmentsTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
-        if ($this->isColumnModified(AppointmentsTableMap::COL_UPATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'upated_at';
+        if ($this->isColumnModified(AppointmentsTableMap::COL_UPDATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
 
         $sql = sprintf(
@@ -875,8 +875,8 @@ abstract class Appointments implements ActiveRecordInterface
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
-                    case 'upated_at':
-                        $stmt->bindValue($identifier, $this->upated_at ? $this->upated_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                    case 'updated_at':
+                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -956,7 +956,7 @@ abstract class Appointments implements ActiveRecordInterface
                 return $this->getCreatedAt();
                 break;
             case 5:
-                return $this->getUpatedAt();
+                return $this->getUpdatedAt();
                 break;
             default:
                 return null;
@@ -993,7 +993,7 @@ abstract class Appointments implements ActiveRecordInterface
             $keys[2] => $this->getAppointmentDateTime(),
             $keys[3] => $this->getAppointmentDetails(),
             $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpatedAt(),
+            $keys[5] => $this->getUpdatedAt(),
         );
         if ($result[$keys[4]] instanceof \DateTime) {
             $result[$keys[4]] = $result[$keys[4]]->format('c');
@@ -1074,7 +1074,7 @@ abstract class Appointments implements ActiveRecordInterface
                 $this->setCreatedAt($value);
                 break;
             case 5:
-                $this->setUpatedAt($value);
+                $this->setUpdatedAt($value);
                 break;
         } // switch()
 
@@ -1118,7 +1118,7 @@ abstract class Appointments implements ActiveRecordInterface
             $this->setCreatedAt($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUpatedAt($arr[$keys[5]]);
+            $this->setUpdatedAt($arr[$keys[5]]);
         }
     }
 
@@ -1176,8 +1176,8 @@ abstract class Appointments implements ActiveRecordInterface
         if ($this->isColumnModified(AppointmentsTableMap::COL_CREATED_AT)) {
             $criteria->add(AppointmentsTableMap::COL_CREATED_AT, $this->created_at);
         }
-        if ($this->isColumnModified(AppointmentsTableMap::COL_UPATED_AT)) {
-            $criteria->add(AppointmentsTableMap::COL_UPATED_AT, $this->upated_at);
+        if ($this->isColumnModified(AppointmentsTableMap::COL_UPDATED_AT)) {
+            $criteria->add(AppointmentsTableMap::COL_UPDATED_AT, $this->updated_at);
         }
 
         return $criteria;
@@ -1269,7 +1269,7 @@ abstract class Appointments implements ActiveRecordInterface
         $copyObj->setAppointmentDateTime($this->getAppointmentDateTime());
         $copyObj->setAppointmentDetails($this->getAppointmentDetails());
         $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpatedAt($this->getUpatedAt());
+        $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setAppointmentId(NULL); // this is a auto-increment column, so set to default value
@@ -1364,7 +1364,7 @@ abstract class Appointments implements ActiveRecordInterface
         $this->appointment_date_time = null;
         $this->appointment_details = null;
         $this->created_at = null;
-        $this->upated_at = null;
+        $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

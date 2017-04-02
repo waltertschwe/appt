@@ -25,14 +25,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAppointmentsQuery orderByAppointmentDateTime($order = Criteria::ASC) Order by the appointment_date_time column
  * @method     ChildAppointmentsQuery orderByAppointmentDetails($order = Criteria::ASC) Order by the appointment_details column
  * @method     ChildAppointmentsQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method     ChildAppointmentsQuery orderByUpatedAt($order = Criteria::ASC) Order by the upated_at column
+ * @method     ChildAppointmentsQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildAppointmentsQuery groupByAppointmentId() Group by the appointment_id column
  * @method     ChildAppointmentsQuery groupByUserId() Group by the user_id column
  * @method     ChildAppointmentsQuery groupByAppointmentDateTime() Group by the appointment_date_time column
  * @method     ChildAppointmentsQuery groupByAppointmentDetails() Group by the appointment_details column
  * @method     ChildAppointmentsQuery groupByCreatedAt() Group by the created_at column
- * @method     ChildAppointmentsQuery groupByUpatedAt() Group by the upated_at column
+ * @method     ChildAppointmentsQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method     ChildAppointmentsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildAppointmentsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -62,7 +62,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAppointments findOneByAppointmentDateTime(string $appointment_date_time) Return the first ChildAppointments filtered by the appointment_date_time column
  * @method     ChildAppointments findOneByAppointmentDetails(string $appointment_details) Return the first ChildAppointments filtered by the appointment_details column
  * @method     ChildAppointments findOneByCreatedAt(string $created_at) Return the first ChildAppointments filtered by the created_at column
- * @method     ChildAppointments findOneByUpatedAt(string $upated_at) Return the first ChildAppointments filtered by the upated_at column *
+ * @method     ChildAppointments findOneByUpdatedAt(string $updated_at) Return the first ChildAppointments filtered by the updated_at column *
 
  * @method     ChildAppointments requirePk($key, ConnectionInterface $con = null) Return the ChildAppointments by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAppointments requireOne(ConnectionInterface $con = null) Return the first ChildAppointments matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -72,7 +72,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAppointments requireOneByAppointmentDateTime(string $appointment_date_time) Return the first ChildAppointments filtered by the appointment_date_time column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAppointments requireOneByAppointmentDetails(string $appointment_details) Return the first ChildAppointments filtered by the appointment_details column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAppointments requireOneByCreatedAt(string $created_at) Return the first ChildAppointments filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAppointments requireOneByUpatedAt(string $upated_at) Return the first ChildAppointments filtered by the upated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAppointments requireOneByUpdatedAt(string $updated_at) Return the first ChildAppointments filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAppointments[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAppointments objects based on current ModelCriteria
  * @method     ChildAppointments[]|ObjectCollection findByAppointmentId(int $appointment_id) Return ChildAppointments objects filtered by the appointment_id column
@@ -80,7 +80,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAppointments[]|ObjectCollection findByAppointmentDateTime(string $appointment_date_time) Return ChildAppointments objects filtered by the appointment_date_time column
  * @method     ChildAppointments[]|ObjectCollection findByAppointmentDetails(string $appointment_details) Return ChildAppointments objects filtered by the appointment_details column
  * @method     ChildAppointments[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildAppointments objects filtered by the created_at column
- * @method     ChildAppointments[]|ObjectCollection findByUpatedAt(string $upated_at) Return ChildAppointments objects filtered by the upated_at column
+ * @method     ChildAppointments[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildAppointments objects filtered by the updated_at column
  * @method     ChildAppointments[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -179,7 +179,7 @@ abstract class AppointmentsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT appointment_id, user_id, appointment_date_time, appointment_details, created_at, upated_at FROM appointments WHERE appointment_id = :p0';
+        $sql = 'SELECT appointment_id, user_id, appointment_date_time, appointment_details, created_at, updated_at FROM appointments WHERE appointment_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -447,16 +447,16 @@ abstract class AppointmentsQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the upated_at column
+     * Filter the query on the updated_at column
      *
      * Example usage:
      * <code>
-     * $query->filterByUpatedAt('2011-03-14'); // WHERE upated_at = '2011-03-14'
-     * $query->filterByUpatedAt('now'); // WHERE upated_at = '2011-03-14'
-     * $query->filterByUpatedAt(array('max' => 'yesterday')); // WHERE upated_at > '2011-03-13'
+     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
      * </code>
      *
-     * @param     mixed $upatedAt The value to use as filter.
+     * @param     mixed $updatedAt The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
@@ -466,16 +466,16 @@ abstract class AppointmentsQuery extends ModelCriteria
      *
      * @return $this|ChildAppointmentsQuery The current query, for fluid interface
      */
-    public function filterByUpatedAt($upatedAt = null, $comparison = null)
+    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
     {
-        if (is_array($upatedAt)) {
+        if (is_array($updatedAt)) {
             $useMinMax = false;
-            if (isset($upatedAt['min'])) {
-                $this->addUsingAlias(AppointmentsTableMap::COL_UPATED_AT, $upatedAt['min'], Criteria::GREATER_EQUAL);
+            if (isset($updatedAt['min'])) {
+                $this->addUsingAlias(AppointmentsTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($upatedAt['max'])) {
-                $this->addUsingAlias(AppointmentsTableMap::COL_UPATED_AT, $upatedAt['max'], Criteria::LESS_EQUAL);
+            if (isset($updatedAt['max'])) {
+                $this->addUsingAlias(AppointmentsTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -486,7 +486,7 @@ abstract class AppointmentsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AppointmentsTableMap::COL_UPATED_AT, $upatedAt, $comparison);
+        return $this->addUsingAlias(AppointmentsTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
