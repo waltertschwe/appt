@@ -73,6 +73,21 @@ class AppointmentController
 		return $response;
 	}
 	
+	/* deleteAppointment - delete individual appointment
+	 * 
+	*/ 
+	public function deleteAppointment( $request, $response, $args ) {
+		// get data from POST request
+		$data = $request->getParsedBody();
+		
+		$this->appt_service->deleteAppointment( $data ); 
+		
+		// redirect to appointment index after update
+		$response = $response->withRedirect("/appointments/");
+		return $response;
+		
+	} 
+	
 	/*
 	 * info - Get Environment INFO
 	 * 

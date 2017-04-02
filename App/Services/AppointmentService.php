@@ -79,7 +79,14 @@ class AppointmentService
 		$appointment->save();
 		
 		return $appointmentId;
+	}
 	
+	public function deleteAppointment( $data ) {
+		$appointmentId = $data['appointment-id'];
+		
+		$appointment = AppointmentsQuery::create()->findOneByAppointmentId( $appointmentId );
+		
+		$appointment->delete();
 	}
 }
 	

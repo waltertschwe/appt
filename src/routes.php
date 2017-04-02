@@ -36,6 +36,8 @@ $app->get('/appointment/[{id}]', 'App\Controllers\AppointmentController:getAppoi
 // Update Appointment
 $app->post('/appointment/', 'App\Controllers\AppointmentController:updateAppointment');
 
+// Delete Appointment
+$app->post('/appointment/delete', 'App\Controllers\AppointmentController:deleteAppointment');
 
 
 
