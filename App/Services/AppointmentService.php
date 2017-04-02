@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Appointment;
+use App\Models\Appointments;
 use App\Models\AppointmentQuery;
 
 class AppointmentService
@@ -24,11 +24,16 @@ class AppointmentService
 	 * 				  create Request* 
 	*/
 	public function handleCreate( $data ) {
-		$appointment = new Appointment();
+		$appointment = new Appointments();
 		
 		$appointment->setUserId(1);
 		$appointment->setAppointmentDateTime( $data["date-range"] );
 		$appointment->setAppointmentDetails( $data["appt-detail"] );
+		
+		$date = new \DateTime();
+		$appointment->setCreatedAt($date->getTimestamp());
+		$appointment->setUpdatedAt($date->getTimestamp());
+		
 		
 		$appointment->save();
 	}	

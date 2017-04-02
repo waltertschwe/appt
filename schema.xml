@@ -11,9 +11,9 @@
 		<column name="appointment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
 		<column name="user_id" type="integer" required="true" />
 		<column name="appointment_date_time" type="varchar" size="255" required="true" />
-		<column name="appointment_details" type="varchar" size="255" required="true" />
+		<column name="appointment_details" type="varchar" size="255" required="false" />
 		<column name="created_at" type="timestamp" required="true" />
-		<column name="upated_at" type="timestamp" required="false" />
+		<column name="updated_at" type="timestamp" required="false" />
 		<foreign-key foreignTable="users">
 			<reference local="user_id" foreign="user_id"/>
 		</foreign-key>
