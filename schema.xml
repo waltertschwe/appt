@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" namespace="App\Models" defaultPhpNamingMethod="underscore">
+	<table name="users" phpName="User">
+		<column name="user_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="first_name" type="varchar" size="255" required="true" />
+		<column name="last_name" type="varchar" size="255" required="true" />
+		<column name="created_at" type="timestamp" required="true" />
+		<column name="updated_at" type="timestamp" required="false" />
+	</table>
+	<table name="appointments" phpName="appointments">
+		<column name="appointment_id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+		<column name="user_id" type="integer" required="true" />
+		<column name="appointment_date_time" type="varchar" size="255" required="true" />
+		<column name="created_at" type="timestamp" required="true" />
+		<column name="upated_at" type="timestamp" required="false" />
+		<foreign-key foreignTable="users">
+			<reference local="user_id" foreign="user_id"/>
+		</foreign-key>
+	</table>
+</database>

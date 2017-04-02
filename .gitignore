@@ -1,0 +1,6 @@
+vendor/
+/logs/*
+!/logs/README.md
+src/settings.php
+node_modules
+logs/*

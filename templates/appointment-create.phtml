@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>User Profile</title>
+		<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+		<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+		
+		<!-- Include Date Range Picker -->
+		<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+		
+	</head>
+	<body>
+	<div class="container">
+		<?php if ($_SERVER['HTTP_REFERER']) { ?>
+		<div class="alert alert-success" role="alert">
+			<strong>Congratulations!</strong> Your appointment has been created.
+		</div>
+		<?php } ?>
+		<h1>Create Appointment</h1>
+		<form method="POST" action="/appointment/create" />
+			<div class="form-group row">
+				<label for="lgFormGroupInput" class="col-sm-2 col-form-label col-form-label-lg">Appointment Date/Time</label>
+				<div class="col-sm-4">
+					<input type="text" value="<?php echo $dateRange; ?>" class="form-control form-control-lg" id="first-name" placeholder="First Name" name="date-range" />
+				</div>
+			</div>
+			<div class="form-group row">
+			<label for="lgFormGroupInput" class="col-sm-2 col-form-label col-form-label-lg">Appointment Details</label>
+			<div class="col-sm-4">
+				<input type="text" name="appt-detail" class="form-control form-control-lg" id="appt-detail" placeholder="Appointment Details" />
+				</div>
+			</div>
+			<script type="text/javascript">
+			$(function() {
+				$('input[name="date-range"]').daterangepicker({
+					timePicker: true,
+					timePickerIncrement: 30,
+					locale: {
+						format: 'MM/DD/YYYY h:mm A'
+					}
+				});
+			});
+			</script>
+			<button type="submit" class="btn btn-primary">Create Appointment</button>
+		</form>
+	</div>
+	</body>
+</html>

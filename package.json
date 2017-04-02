@@ -1,0 +1,22 @@
+{
+  "name": "appt",
+  "version": "1.0.0",
+  "description": "Appointment App",
+  "main": "public/index.php",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slimphp/Slim-Skeleton.git"
+  },
+  "author": "Walter Schweitzer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slimphp/Slim-Skeleton/issues"
+  },
+  "homepage": "https://github.com/slimphp/Slim-Skeleton#readme"
+}
