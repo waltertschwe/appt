@@ -42,9 +42,34 @@ class AppointmentController
 	 * 
 	*/
 	public function getAppointments($request, $response) {
+		// get all appointments
 		$appointments = $this->appt_service->getAllAppointments();
 		
-		$response = $this->view->render( $response, "appointment-index.phtml", [ "appts" => $appointments ] );	
+		$response = $this->view->render( $response, "appointment-index.phtml", [ "appointments" => $appointments ] );	
+		return $response;
+	}
+	 
+	/* getAppointment - get an individual appointment
+	 * 
+	 * 
+	*/ 
+	public function getAppointment($request, $response, $args) {
+		// get individual appointment
+		$appointmentData = $this->appt_service->getAppointment( $args );
+		
+		// response to return to view
+		$response = $this->view->render( $response, "appointment-edit.phtml", ["appointment" => $appointmentData] );
+		return $response;
+	}
+	
+	public function updateAppointment( $request, $response, $args ) {
+		// get data from POST request
+		$data = $request->getParsedBody();
+		
+		$appointmentId = $this->appt_service->updateAppointment( $data );
+		
+		// redirect to appointment index after update
+		$response = $response->withRedirect("/appointments/");
 		return $response;
 	}
 	

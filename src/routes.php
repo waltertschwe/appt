@@ -30,6 +30,13 @@ $app->get('/appointment/create', 'App\Controllers\AppointmentController:create')
 // Handle Appointment Create
 $app->post('/appointment/create', 'App\Controllers\AppointmentController:postAppointment');
 
+// Handle Appointment Create
+$app->get('/appointment/[{id}]', 'App\Controllers\AppointmentController:getAppointment');
+
+// Update Appointment
+$app->post('/appointment/', 'App\Controllers\AppointmentController:updateAppointment');
+
+
 
 
 

@@ -40,6 +40,10 @@ class AppointmentService
 		$appointment->save();
 	}
 	
+	/* getAllAppointments - gets all appointments for an individual user
+	 * 
+	 * 
+	 */
 	public function getAllAppointments() {
 		// TODO: hardcoding to the first generated user
 		//would make this dynamic by adding authentication and using session object
@@ -51,8 +55,31 @@ class AppointmentService
 			->filterByUser( $user )
 			->find();
 		
-		return $appointments
+		return $appointments;
 	}	
+	
+	public function getAppointment( $args ) {
+		$appointmentId = $args['id'];
 		
+		$appointment = AppointmentsQuery::create()->findOneByAppointmentId( $appointmentId );
+		
+		// php7 null coalesce operator
+		return $appointment ?? false;
+		
+	}
+	
+	public function updateAppointment( $data ) {
+		$appointmentId = $data['appointment-id'];
+	
+		$appointment = AppointmentsQuery::create()->findOneByAppointmentId( $appointmentId );
+		
+		$appointment->setAppointmentDateTime( $data['date-range'] );
+		$appointment->setAppointmentDetails( $data['appt-details'] );
+		
+		$appointment->save();
+		
+		return $appointmentId;
+	
+	}
 }
 	

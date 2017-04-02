@@ -1,0 +1,16 @@
+<?php 
+//var_dump($appointments);
+
+foreach( $appointments as $appointment ) {
+	$appointmentId = $appointment->getAppointmentId();
+	$dateTime = $appointment->getAppointmentDateTime();
+	$details = $appointment->getAppointmentDetails();
+	$createdAt = $appointment->getCreatedAt();
+	
+	// User Object
+	$firstName = $appointment->getUser()->getFirstName();
+	$lastName = $appointment->getUser()->getLastName();
+	
+	var_dump($createdAt);
+	
+}

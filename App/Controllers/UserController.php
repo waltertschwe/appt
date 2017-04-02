@@ -22,7 +22,6 @@ class UserController
 		
 		// response to return to view
 		$response = $this->view->render( $response, "user-profile.phtml", ["user" => $userData] );
-		
 		return $response;
 	}
 	
@@ -33,6 +32,7 @@ class UserController
 		// update user
 		$userId = $this->user_service->updateUser( $data );
 		
+		// redirect to user profile
 		$response = $response->withRedirect("/user/profile/" . $userId);
 		return $response;
 		
