@@ -2,8 +2,8 @@
 
 namespace App\Models\Map;
 
-use App\Models\User;
-use App\Models\UserQuery;
+use App\Models\Appointments;
+use App\Models\AppointmentsQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'users' table.
+ * This class defines the structure of the 'appointments' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class UserTableMap extends TableMap
+class AppointmentsTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class UserTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'App.Models.Map.UserTableMap';
+    const CLASS_NAME = 'App.Models.Map.AppointmentsTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class UserTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'users';
+    const TABLE_NAME = 'appointments';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\App\\Models\\User';
+    const OM_CLASS = '\\App\\Models\\Appointments';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'App.Models.User';
+    const CLASS_DEFAULT = 'App.Models.Appointments';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -69,32 +69,37 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
+
+    /**
+     * the column name for the appointment_id field
+     */
+    const COL_APPOINTMENT_ID = 'appointments.appointment_id';
 
     /**
      * the column name for the user_id field
      */
-    const COL_USER_ID = 'users.user_id';
+    const COL_USER_ID = 'appointments.user_id';
 
     /**
-     * the column name for the first_name field
+     * the column name for the appointment_date_time field
      */
-    const COL_FIRST_NAME = 'users.first_name';
+    const COL_APPOINTMENT_DATE_TIME = 'appointments.appointment_date_time';
 
     /**
-     * the column name for the last_name field
+     * the column name for the appointment_details field
      */
-    const COL_LAST_NAME = 'users.last_name';
+    const COL_APPOINTMENT_DETAILS = 'appointments.appointment_details';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'users.created_at';
+    const COL_CREATED_AT = 'appointments.created_at';
 
     /**
-     * the column name for the updated_at field
+     * the column name for the upated_at field
      */
-    const COL_UPDATED_AT = 'users.updated_at';
+    const COL_UPATED_AT = 'appointments.upated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -108,11 +113,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('UserId', 'FirstName', 'LastName', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('userId', 'firstName', 'lastName', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID, UserTableMap::COL_FIRST_NAME, UserTableMap::COL_LAST_NAME, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('user_id', 'first_name', 'last_name', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('AppointmentId', 'UserId', 'AppointmentDateTime', 'AppointmentDetails', 'CreatedAt', 'UpatedAt', ),
+        self::TYPE_CAMELNAME     => array('appointmentId', 'userId', 'appointmentDateTime', 'appointmentDetails', 'createdAt', 'upatedAt', ),
+        self::TYPE_COLNAME       => array(AppointmentsTableMap::COL_APPOINTMENT_ID, AppointmentsTableMap::COL_USER_ID, AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME, AppointmentsTableMap::COL_APPOINTMENT_DETAILS, AppointmentsTableMap::COL_CREATED_AT, AppointmentsTableMap::COL_UPATED_AT, ),
+        self::TYPE_FIELDNAME     => array('appointment_id', 'user_id', 'appointment_date_time', 'appointment_details', 'created_at', 'upated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -122,11 +127,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('UserId' => 0, 'FirstName' => 1, 'LastName' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, ),
-        self::TYPE_CAMELNAME     => array('userId' => 0, 'firstName' => 1, 'lastName' => 2, 'createdAt' => 3, 'updatedAt' => 4, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_USER_ID => 0, UserTableMap::COL_FIRST_NAME => 1, UserTableMap::COL_LAST_NAME => 2, UserTableMap::COL_CREATED_AT => 3, UserTableMap::COL_UPDATED_AT => 4, ),
-        self::TYPE_FIELDNAME     => array('user_id' => 0, 'first_name' => 1, 'last_name' => 2, 'created_at' => 3, 'updated_at' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('AppointmentId' => 0, 'UserId' => 1, 'AppointmentDateTime' => 2, 'AppointmentDetails' => 3, 'CreatedAt' => 4, 'UpatedAt' => 5, ),
+        self::TYPE_CAMELNAME     => array('appointmentId' => 0, 'userId' => 1, 'appointmentDateTime' => 2, 'appointmentDetails' => 3, 'createdAt' => 4, 'upatedAt' => 5, ),
+        self::TYPE_COLNAME       => array(AppointmentsTableMap::COL_APPOINTMENT_ID => 0, AppointmentsTableMap::COL_USER_ID => 1, AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME => 2, AppointmentsTableMap::COL_APPOINTMENT_DETAILS => 3, AppointmentsTableMap::COL_CREATED_AT => 4, AppointmentsTableMap::COL_UPATED_AT => 5, ),
+        self::TYPE_FIELDNAME     => array('appointment_id' => 0, 'user_id' => 1, 'appointment_date_time' => 2, 'appointment_details' => 3, 'created_at' => 4, 'upated_at' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -139,18 +144,19 @@ class UserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('users');
-        $this->setPhpName('User');
+        $this->setName('appointments');
+        $this->setPhpName('Appointments');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\App\\Models\\User');
+        $this->setClassName('\\App\\Models\\Appointments');
         $this->setPackage('App.Models');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('user_id', 'UserId', 'INTEGER', true, null, null);
-        $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 255, null);
-        $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 255, null);
+        $this->addPrimaryKey('appointment_id', 'AppointmentId', 'INTEGER', true, null, null);
+        $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'users', 'user_id', true, null, null);
+        $this->addColumn('appointment_date_time', 'AppointmentDateTime', 'VARCHAR', true, 255, null);
+        $this->addColumn('appointment_details', 'AppointmentDetails', 'VARCHAR', true, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', true, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('upated_at', 'UpatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
 
     /**
@@ -158,13 +164,13 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Appointments', '\\App\\Models\\Appointments', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('User', '\\App\\Models\\User', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':user_id',
     1 => ':user_id',
   ),
-), null, null, 'Appointmentss', false);
+), null, null, null, false);
     } // buildRelations()
 
     /**
@@ -183,11 +189,11 @@ class UserTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -207,7 +213,7 @@ class UserTableMap extends TableMap
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
 
@@ -224,7 +230,7 @@ class UserTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? UserTableMap::CLASS_DEFAULT : UserTableMap::OM_CLASS;
+        return $withPrefix ? AppointmentsTableMap::CLASS_DEFAULT : AppointmentsTableMap::OM_CLASS;
     }
 
     /**
@@ -238,22 +244,22 @@ class UserTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (User object, last column rank)
+     * @return array           (Appointments object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = UserTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = UserTableMap::getInstanceFromPool($key))) {
+        $key = AppointmentsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = AppointmentsTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + UserTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + AppointmentsTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = UserTableMap::OM_CLASS;
-            /** @var User $obj */
+            $cls = AppointmentsTableMap::OM_CLASS;
+            /** @var Appointments $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            UserTableMap::addInstanceToPool($obj, $key);
+            AppointmentsTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -276,18 +282,18 @@ class UserTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = UserTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = UserTableMap::getInstanceFromPool($key))) {
+            $key = AppointmentsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = AppointmentsTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var User $obj */
+                /** @var Appointments $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                UserTableMap::addInstanceToPool($obj, $key);
+                AppointmentsTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -308,17 +314,19 @@ class UserTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(UserTableMap::COL_USER_ID);
-            $criteria->addSelectColumn(UserTableMap::COL_FIRST_NAME);
-            $criteria->addSelectColumn(UserTableMap::COL_LAST_NAME);
-            $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_APPOINTMENT_ID);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_APPOINTMENT_DETAILS);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_CREATED_AT);
+            $criteria->addSelectColumn(AppointmentsTableMap::COL_UPATED_AT);
         } else {
+            $criteria->addSelectColumn($alias . '.appointment_id');
             $criteria->addSelectColumn($alias . '.user_id');
-            $criteria->addSelectColumn($alias . '.first_name');
-            $criteria->addSelectColumn($alias . '.last_name');
+            $criteria->addSelectColumn($alias . '.appointment_date_time');
+            $criteria->addSelectColumn($alias . '.appointment_details');
             $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.upated_at');
         }
     }
 
@@ -331,7 +339,7 @@ class UserTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(UserTableMap::DATABASE_NAME)->getTable(UserTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(AppointmentsTableMap::DATABASE_NAME)->getTable(AppointmentsTableMap::TABLE_NAME);
     }
 
     /**
@@ -339,16 +347,16 @@ class UserTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(UserTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(UserTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new UserTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(AppointmentsTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(AppointmentsTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new AppointmentsTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a User or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Appointments or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or User object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Appointments object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -359,27 +367,27 @@ class UserTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AppointmentsTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \App\Models\User) { // it's a model object
+        } elseif ($values instanceof \App\Models\Appointments) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(UserTableMap::DATABASE_NAME);
-            $criteria->add(UserTableMap::COL_USER_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(AppointmentsTableMap::DATABASE_NAME);
+            $criteria->add(AppointmentsTableMap::COL_APPOINTMENT_ID, (array) $values, Criteria::IN);
         }
 
-        $query = UserQuery::create()->mergeWith($criteria);
+        $query = AppointmentsQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            UserTableMap::clearInstancePool();
+            AppointmentsTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                UserTableMap::removeInstanceFromPool($singleval);
+                AppointmentsTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -387,20 +395,20 @@ class UserTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the users table.
+     * Deletes all rows from the appointments table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return UserQuery::create()->doDeleteAll($con);
+        return AppointmentsQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a User or Criteria object.
+     * Performs an INSERT on the database, given a Appointments or Criteria object.
      *
-     * @param mixed               $criteria Criteria or User object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Appointments object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -409,22 +417,22 @@ class UserTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AppointmentsTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from User object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Appointments object
         }
 
-        if ($criteria->containsKey(UserTableMap::COL_USER_ID) && $criteria->keyContainsValue(UserTableMap::COL_USER_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.UserTableMap::COL_USER_ID.')');
+        if ($criteria->containsKey(AppointmentsTableMap::COL_APPOINTMENT_ID) && $criteria->keyContainsValue(AppointmentsTableMap::COL_APPOINTMENT_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.AppointmentsTableMap::COL_APPOINTMENT_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = UserQuery::create()->mergeWith($criteria);
+        $query = AppointmentsQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -433,7 +441,7 @@ class UserTableMap extends TableMap
         });
     }
 
-} // UserTableMap
+} // AppointmentsTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-UserTableMap::buildTableMap();
+AppointmentsTableMap::buildTableMap();

@@ -27,7 +27,10 @@ class AppointmentService
 		$appointment = new Appointment();
 		
 		$appointment->setUserId(1);
-		$appointment->appointmentDateTime($data["date-range"]);
+		$appointment->setAppointmentDateTime( $data["date-range"] );
+		$appointment->setAppointmentDetails( $data["appt-detail"] );
+		
+		$appointment->save();
 	}	
 		
 }

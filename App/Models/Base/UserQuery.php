@@ -40,17 +40,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUserQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildUserQuery leftJoinappointments($relationAlias = null) Adds a LEFT JOIN clause to the query using the appointments relation
- * @method     ChildUserQuery rightJoinappointments($relationAlias = null) Adds a RIGHT JOIN clause to the query using the appointments relation
- * @method     ChildUserQuery innerJoinappointments($relationAlias = null) Adds a INNER JOIN clause to the query using the appointments relation
+ * @method     ChildUserQuery leftJoinAppointments($relationAlias = null) Adds a LEFT JOIN clause to the query using the Appointments relation
+ * @method     ChildUserQuery rightJoinAppointments($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Appointments relation
+ * @method     ChildUserQuery innerJoinAppointments($relationAlias = null) Adds a INNER JOIN clause to the query using the Appointments relation
  *
- * @method     ChildUserQuery joinWithappointments($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the appointments relation
+ * @method     ChildUserQuery joinWithAppointments($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Appointments relation
  *
- * @method     ChildUserQuery leftJoinWithappointments() Adds a LEFT JOIN clause and with to the query using the appointments relation
- * @method     ChildUserQuery rightJoinWithappointments() Adds a RIGHT JOIN clause and with to the query using the appointments relation
- * @method     ChildUserQuery innerJoinWithappointments() Adds a INNER JOIN clause and with to the query using the appointments relation
+ * @method     ChildUserQuery leftJoinWithAppointments() Adds a LEFT JOIN clause and with to the query using the Appointments relation
+ * @method     ChildUserQuery rightJoinWithAppointments() Adds a RIGHT JOIN clause and with to the query using the Appointments relation
+ * @method     ChildUserQuery innerJoinWithAppointments() Adds a INNER JOIN clause and with to the query using the Appointments relation
  *
- * @method     \App\Models\appointmentsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \App\Models\AppointmentsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -442,40 +442,40 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \App\Models\appointments object
+     * Filter the query by a related \App\Models\Appointments object
      *
-     * @param \App\Models\appointments|ObjectCollection $appointments the related object to use as filter
+     * @param \App\Models\Appointments|ObjectCollection $appointments the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildUserQuery The current query, for fluid interface
      */
-    public function filterByappointments($appointments, $comparison = null)
+    public function filterByAppointments($appointments, $comparison = null)
     {
-        if ($appointments instanceof \App\Models\appointments) {
+        if ($appointments instanceof \App\Models\Appointments) {
             return $this
                 ->addUsingAlias(UserTableMap::COL_USER_ID, $appointments->getUserId(), $comparison);
         } elseif ($appointments instanceof ObjectCollection) {
             return $this
-                ->useappointmentsQuery()
+                ->useAppointmentsQuery()
                 ->filterByPrimaryKeys($appointments->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByappointments() only accepts arguments of type \App\Models\appointments or Collection');
+            throw new PropelException('filterByAppointments() only accepts arguments of type \App\Models\Appointments or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the appointments relation
+     * Adds a JOIN clause to the query using the Appointments relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function joinappointments($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinAppointments($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('appointments');
+        $relationMap = $tableMap->getRelation('Appointments');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -490,14 +490,14 @@ abstract class UserQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'appointments');
+            $this->addJoinObject($join, 'Appointments');
         }
 
         return $this;
     }
 
     /**
-     * Use the appointments relation appointments object
+     * Use the Appointments relation Appointments object
      *
      * @see useQuery()
      *
@@ -505,13 +505,13 @@ abstract class UserQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \App\Models\appointmentsQuery A secondary query class using the current class as primary query
+     * @return \App\Models\AppointmentsQuery A secondary query class using the current class as primary query
      */
-    public function useappointmentsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useAppointmentsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinappointments($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'appointments', '\App\Models\appointmentsQuery');
+            ->joinAppointments($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Appointments', '\App\Models\AppointmentsQuery');
     }
 
     /**

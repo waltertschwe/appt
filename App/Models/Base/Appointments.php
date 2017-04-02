@@ -5,18 +5,15 @@ namespace App\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use App\Models\Appointments as ChildAppointments;
 use App\Models\AppointmentsQuery as ChildAppointmentsQuery;
 use App\Models\User as ChildUser;
 use App\Models\UserQuery as ChildUserQuery;
 use App\Models\Map\AppointmentsTableMap;
-use App\Models\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -26,18 +23,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'users' table.
+ * Base class that represents a row from the 'appointments' table.
  *
  *
  *
  * @package    propel.generator.App.Models.Base
  */
-abstract class User implements ActiveRecordInterface
+abstract class Appointments implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\App\\Models\\Map\\UserTableMap';
+    const TABLE_MAP = '\\App\\Models\\Map\\AppointmentsTableMap';
 
 
     /**
@@ -67,6 +64,13 @@ abstract class User implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
+     * The value for the appointment_id field.
+     *
+     * @var        int
+     */
+    protected $appointment_id;
+
+    /**
      * The value for the user_id field.
      *
      * @var        int
@@ -74,18 +78,18 @@ abstract class User implements ActiveRecordInterface
     protected $user_id;
 
     /**
-     * The value for the first_name field.
+     * The value for the appointment_date_time field.
      *
      * @var        string
      */
-    protected $first_name;
+    protected $appointment_date_time;
 
     /**
-     * The value for the last_name field.
+     * The value for the appointment_details field.
      *
      * @var        string
      */
-    protected $last_name;
+    protected $appointment_details;
 
     /**
      * The value for the created_at field.
@@ -95,17 +99,16 @@ abstract class User implements ActiveRecordInterface
     protected $created_at;
 
     /**
-     * The value for the updated_at field.
+     * The value for the upated_at field.
      *
      * @var        DateTime
      */
-    protected $updated_at;
+    protected $upated_at;
 
     /**
-     * @var        ObjectCollection|ChildAppointments[] Collection to store aggregation of ChildAppointments objects.
+     * @var        ChildUser
      */
-    protected $collAppointmentss;
-    protected $collAppointmentssPartial;
+    protected $aUser;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -116,13 +119,7 @@ abstract class User implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildAppointments[]
-     */
-    protected $appointmentssScheduledForDeletion = null;
-
-    /**
-     * Initializes internal state of App\Models\Base\User object.
+     * Initializes internal state of App\Models\Base\Appointments object.
      */
     public function __construct()
     {
@@ -217,9 +214,9 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>User</code> instance.  If
-     * <code>obj</code> is an instance of <code>User</code>, delegates to
-     * <code>equals(User)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Appointments</code> instance.  If
+     * <code>obj</code> is an instance of <code>Appointments</code>, delegates to
+     * <code>equals(Appointments)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -285,7 +282,7 @@ abstract class User implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|User The current object, for fluid interface
+     * @return $this|Appointments The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -347,6 +344,16 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [appointment_id] column value.
+     *
+     * @return int
+     */
+    public function getAppointmentId()
+    {
+        return $this->appointment_id;
+    }
+
+    /**
      * Get the [user_id] column value.
      *
      * @return int
@@ -357,23 +364,23 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [first_name] column value.
+     * Get the [appointment_date_time] column value.
      *
      * @return string
      */
-    public function getFirstName()
+    public function getAppointmentDateTime()
     {
-        return $this->first_name;
+        return $this->appointment_date_time;
     }
 
     /**
-     * Get the [last_name] column value.
+     * Get the [appointment_details] column value.
      *
      * @return string
      */
-    public function getLastName()
+    public function getAppointmentDetails()
     {
-        return $this->last_name;
+        return $this->appointment_details;
     }
 
     /**
@@ -397,7 +404,7 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [updated_at] column value.
+     * Get the [optionally formatted] temporal [upated_at] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -407,20 +414,40 @@ abstract class User implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getUpdatedAt($format = NULL)
+    public function getUpatedAt($format = NULL)
     {
         if ($format === null) {
-            return $this->updated_at;
+            return $this->upated_at;
         } else {
-            return $this->updated_at instanceof \DateTimeInterface ? $this->updated_at->format($format) : null;
+            return $this->upated_at instanceof \DateTimeInterface ? $this->upated_at->format($format) : null;
         }
     }
+
+    /**
+     * Set the value of [appointment_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
+     */
+    public function setAppointmentId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->appointment_id !== $v) {
+            $this->appointment_id = $v;
+            $this->modifiedColumns[AppointmentsTableMap::COL_APPOINTMENT_ID] = true;
+        }
+
+        return $this;
+    } // setAppointmentId()
 
     /**
      * Set the value of [user_id] column.
      *
      * @param int $v new value
-     * @return $this|\App\Models\User The current object (for fluent API support)
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
      */
     public function setUserId($v)
     {
@@ -430,58 +457,62 @@ abstract class User implements ActiveRecordInterface
 
         if ($this->user_id !== $v) {
             $this->user_id = $v;
-            $this->modifiedColumns[UserTableMap::COL_USER_ID] = true;
+            $this->modifiedColumns[AppointmentsTableMap::COL_USER_ID] = true;
+        }
+
+        if ($this->aUser !== null && $this->aUser->getUserId() !== $v) {
+            $this->aUser = null;
         }
 
         return $this;
     } // setUserId()
 
     /**
-     * Set the value of [first_name] column.
+     * Set the value of [appointment_date_time] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\User The current object (for fluent API support)
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
      */
-    public function setFirstName($v)
+    public function setAppointmentDateTime($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->first_name !== $v) {
-            $this->first_name = $v;
-            $this->modifiedColumns[UserTableMap::COL_FIRST_NAME] = true;
+        if ($this->appointment_date_time !== $v) {
+            $this->appointment_date_time = $v;
+            $this->modifiedColumns[AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME] = true;
         }
 
         return $this;
-    } // setFirstName()
+    } // setAppointmentDateTime()
 
     /**
-     * Set the value of [last_name] column.
+     * Set the value of [appointment_details] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\User The current object (for fluent API support)
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
      */
-    public function setLastName($v)
+    public function setAppointmentDetails($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->last_name !== $v) {
-            $this->last_name = $v;
-            $this->modifiedColumns[UserTableMap::COL_LAST_NAME] = true;
+        if ($this->appointment_details !== $v) {
+            $this->appointment_details = $v;
+            $this->modifiedColumns[AppointmentsTableMap::COL_APPOINTMENT_DETAILS] = true;
         }
 
         return $this;
-    } // setLastName()
+    } // setAppointmentDetails()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\User The current object (for fluent API support)
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
      */
     public function setCreatedAt($v)
     {
@@ -489,7 +520,7 @@ abstract class User implements ActiveRecordInterface
         if ($this->created_at !== null || $dt !== null) {
             if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created_at->format("Y-m-d H:i:s.u")) {
                 $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UserTableMap::COL_CREATED_AT] = true;
+                $this->modifiedColumns[AppointmentsTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
 
@@ -497,24 +528,24 @@ abstract class User implements ActiveRecordInterface
     } // setCreatedAt()
 
     /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
+     * Sets the value of [upated_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\User The current object (for fluent API support)
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
      */
-    public function setUpdatedAt($v)
+    public function setUpatedAt($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->updated_at->format("Y-m-d H:i:s.u")) {
-                $this->updated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UserTableMap::COL_UPDATED_AT] = true;
+        if ($this->upated_at !== null || $dt !== null) {
+            if ($this->upated_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->upated_at->format("Y-m-d H:i:s.u")) {
+                $this->upated_at = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[AppointmentsTableMap::COL_UPATED_AT] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setUpdatedAt()
+    } // setUpatedAt()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -552,26 +583,29 @@ abstract class User implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : AppointmentsTableMap::translateFieldName('AppointmentId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->appointment_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AppointmentsTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('FirstName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->first_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AppointmentsTableMap::translateFieldName('AppointmentDateTime', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->appointment_date_time = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('LastName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->last_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AppointmentsTableMap::translateFieldName('AppointmentDetails', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->appointment_details = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AppointmentsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AppointmentsTableMap::translateFieldName('UpatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->upated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -580,10 +614,10 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = AppointmentsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\User'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\Appointments'), 0, $e);
         }
     }
 
@@ -602,6 +636,9 @@ abstract class User implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aUser !== null && $this->user_id !== $this->aUser->getUserId()) {
+            $this->aUser = null;
+        }
     } // ensureConsistency
 
     /**
@@ -625,13 +662,13 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(AppointmentsTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildUserQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildAppointmentsQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -641,8 +678,7 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collAppointmentss = null;
-
+            $this->aUser = null;
         } // if (deep)
     }
 
@@ -652,8 +688,8 @@ abstract class User implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see User::setDeleted()
-     * @see User::isDeleted()
+     * @see Appointments::setDeleted()
+     * @see Appointments::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -662,11 +698,11 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AppointmentsTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildUserQuery::create()
+            $deleteQuery = ChildAppointmentsQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -701,7 +737,7 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AppointmentsTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -720,7 +756,7 @@ abstract class User implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                UserTableMap::addInstanceToPool($this);
+                AppointmentsTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -746,6 +782,18 @@ abstract class User implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aUser !== null) {
+                if ($this->aUser->isModified() || $this->aUser->isNew()) {
+                    $affectedRows += $this->aUser->save($con);
+                }
+                $this->setUser($this->aUser);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -755,23 +803,6 @@ abstract class User implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
-            }
-
-            if ($this->appointmentssScheduledForDeletion !== null) {
-                if (!$this->appointmentssScheduledForDeletion->isEmpty()) {
-                    \App\Models\AppointmentsQuery::create()
-                        ->filterByPrimaryKeys($this->appointmentssScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->appointmentssScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collAppointmentss !== null) {
-                foreach ($this->collAppointmentss as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -794,30 +825,33 @@ abstract class User implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[UserTableMap::COL_USER_ID] = true;
-        if (null !== $this->user_id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UserTableMap::COL_USER_ID . ')');
+        $this->modifiedColumns[AppointmentsTableMap::COL_APPOINTMENT_ID] = true;
+        if (null !== $this->appointment_id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . AppointmentsTableMap::COL_APPOINTMENT_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UserTableMap::COL_USER_ID)) {
+        if ($this->isColumnModified(AppointmentsTableMap::COL_APPOINTMENT_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'appointment_id';
+        }
+        if ($this->isColumnModified(AppointmentsTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'user_id';
         }
-        if ($this->isColumnModified(UserTableMap::COL_FIRST_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'first_name';
+        if ($this->isColumnModified(AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME)) {
+            $modifiedColumns[':p' . $index++]  = 'appointment_date_time';
         }
-        if ($this->isColumnModified(UserTableMap::COL_LAST_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'last_name';
+        if ($this->isColumnModified(AppointmentsTableMap::COL_APPOINTMENT_DETAILS)) {
+            $modifiedColumns[':p' . $index++]  = 'appointment_details';
         }
-        if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
+        if ($this->isColumnModified(AppointmentsTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
-        if ($this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'updated_at';
+        if ($this->isColumnModified(AppointmentsTableMap::COL_UPATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'upated_at';
         }
 
         $sql = sprintf(
-            'INSERT INTO users (%s) VALUES (%s)',
+            'INSERT INTO appointments (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -826,20 +860,23 @@ abstract class User implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case 'appointment_id':
+                        $stmt->bindValue($identifier, $this->appointment_id, PDO::PARAM_INT);
+                        break;
                     case 'user_id':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
                         break;
-                    case 'first_name':
-                        $stmt->bindValue($identifier, $this->first_name, PDO::PARAM_STR);
+                    case 'appointment_date_time':
+                        $stmt->bindValue($identifier, $this->appointment_date_time, PDO::PARAM_STR);
                         break;
-                    case 'last_name':
-                        $stmt->bindValue($identifier, $this->last_name, PDO::PARAM_STR);
+                    case 'appointment_details':
+                        $stmt->bindValue($identifier, $this->appointment_details, PDO::PARAM_STR);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
-                    case 'updated_at':
-                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                    case 'upated_at':
+                        $stmt->bindValue($identifier, $this->upated_at ? $this->upated_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -854,7 +891,7 @@ abstract class User implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
-        $this->setUserId($pk);
+        $this->setAppointmentId($pk);
 
         $this->setNew(false);
     }
@@ -887,7 +924,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UserTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = AppointmentsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -904,19 +941,22 @@ abstract class User implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getUserId();
+                return $this->getAppointmentId();
                 break;
             case 1:
-                return $this->getFirstName();
+                return $this->getUserId();
                 break;
             case 2:
-                return $this->getLastName();
+                return $this->getAppointmentDateTime();
                 break;
             case 3:
-                return $this->getCreatedAt();
+                return $this->getAppointmentDetails();
                 break;
             case 4:
-                return $this->getUpdatedAt();
+                return $this->getCreatedAt();
+                break;
+            case 5:
+                return $this->getUpatedAt();
                 break;
             default:
                 return null;
@@ -942,24 +982,25 @@ abstract class User implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['User'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Appointments'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['User'][$this->hashCode()] = true;
-        $keys = UserTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Appointments'][$this->hashCode()] = true;
+        $keys = AppointmentsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getUserId(),
-            $keys[1] => $this->getFirstName(),
-            $keys[2] => $this->getLastName(),
-            $keys[3] => $this->getCreatedAt(),
-            $keys[4] => $this->getUpdatedAt(),
+            $keys[0] => $this->getAppointmentId(),
+            $keys[1] => $this->getUserId(),
+            $keys[2] => $this->getAppointmentDateTime(),
+            $keys[3] => $this->getAppointmentDetails(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpatedAt(),
         );
-        if ($result[$keys[3]] instanceof \DateTime) {
-            $result[$keys[3]] = $result[$keys[3]]->format('c');
-        }
-
         if ($result[$keys[4]] instanceof \DateTime) {
             $result[$keys[4]] = $result[$keys[4]]->format('c');
+        }
+
+        if ($result[$keys[5]] instanceof \DateTime) {
+            $result[$keys[5]] = $result[$keys[5]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -968,20 +1009,20 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collAppointmentss) {
+            if (null !== $this->aUser) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'appointmentss';
+                        $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'appointmentss';
+                        $key = 'users';
                         break;
                     default:
-                        $key = 'Appointmentss';
+                        $key = 'User';
                 }
 
-                $result[$key] = $this->collAppointmentss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -997,11 +1038,11 @@ abstract class User implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\App\Models\User
+     * @return $this|\App\Models\Appointments
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UserTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = AppointmentsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1012,25 +1053,28 @@ abstract class User implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\App\Models\User
+     * @return $this|\App\Models\Appointments
      */
     public function setByPosition($pos, $value)
     {
         switch ($pos) {
             case 0:
-                $this->setUserId($value);
+                $this->setAppointmentId($value);
                 break;
             case 1:
-                $this->setFirstName($value);
+                $this->setUserId($value);
                 break;
             case 2:
-                $this->setLastName($value);
+                $this->setAppointmentDateTime($value);
                 break;
             case 3:
-                $this->setCreatedAt($value);
+                $this->setAppointmentDetails($value);
                 break;
             case 4:
-                $this->setUpdatedAt($value);
+                $this->setCreatedAt($value);
+                break;
+            case 5:
+                $this->setUpatedAt($value);
                 break;
         } // switch()
 
@@ -1056,22 +1100,25 @@ abstract class User implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = UserTableMap::getFieldNames($keyType);
+        $keys = AppointmentsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setUserId($arr[$keys[0]]);
+            $this->setAppointmentId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setFirstName($arr[$keys[1]]);
+            $this->setUserId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setLastName($arr[$keys[2]]);
+            $this->setAppointmentDateTime($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCreatedAt($arr[$keys[3]]);
+            $this->setAppointmentDetails($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUpdatedAt($arr[$keys[4]]);
+            $this->setCreatedAt($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setUpatedAt($arr[$keys[5]]);
         }
     }
 
@@ -1092,7 +1139,7 @@ abstract class User implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\App\Models\User The current object, for fluid interface
+     * @return $this|\App\Models\Appointments The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1112,22 +1159,25 @@ abstract class User implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(UserTableMap::DATABASE_NAME);
+        $criteria = new Criteria(AppointmentsTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(UserTableMap::COL_USER_ID)) {
-            $criteria->add(UserTableMap::COL_USER_ID, $this->user_id);
+        if ($this->isColumnModified(AppointmentsTableMap::COL_APPOINTMENT_ID)) {
+            $criteria->add(AppointmentsTableMap::COL_APPOINTMENT_ID, $this->appointment_id);
         }
-        if ($this->isColumnModified(UserTableMap::COL_FIRST_NAME)) {
-            $criteria->add(UserTableMap::COL_FIRST_NAME, $this->first_name);
+        if ($this->isColumnModified(AppointmentsTableMap::COL_USER_ID)) {
+            $criteria->add(AppointmentsTableMap::COL_USER_ID, $this->user_id);
         }
-        if ($this->isColumnModified(UserTableMap::COL_LAST_NAME)) {
-            $criteria->add(UserTableMap::COL_LAST_NAME, $this->last_name);
+        if ($this->isColumnModified(AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME)) {
+            $criteria->add(AppointmentsTableMap::COL_APPOINTMENT_DATE_TIME, $this->appointment_date_time);
         }
-        if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
-            $criteria->add(UserTableMap::COL_CREATED_AT, $this->created_at);
+        if ($this->isColumnModified(AppointmentsTableMap::COL_APPOINTMENT_DETAILS)) {
+            $criteria->add(AppointmentsTableMap::COL_APPOINTMENT_DETAILS, $this->appointment_details);
         }
-        if ($this->isColumnModified(UserTableMap::COL_UPDATED_AT)) {
-            $criteria->add(UserTableMap::COL_UPDATED_AT, $this->updated_at);
+        if ($this->isColumnModified(AppointmentsTableMap::COL_CREATED_AT)) {
+            $criteria->add(AppointmentsTableMap::COL_CREATED_AT, $this->created_at);
+        }
+        if ($this->isColumnModified(AppointmentsTableMap::COL_UPATED_AT)) {
+            $criteria->add(AppointmentsTableMap::COL_UPATED_AT, $this->upated_at);
         }
 
         return $criteria;
@@ -1145,8 +1195,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildUserQuery::create();
-        $criteria->add(UserTableMap::COL_USER_ID, $this->user_id);
+        $criteria = ChildAppointmentsQuery::create();
+        $criteria->add(AppointmentsTableMap::COL_APPOINTMENT_ID, $this->appointment_id);
 
         return $criteria;
     }
@@ -1159,7 +1209,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getUserId();
+        $validPk = null !== $this->getAppointmentId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1179,18 +1229,18 @@ abstract class User implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getUserId();
+        return $this->getAppointmentId();
     }
 
     /**
-     * Generic method to set the primary key (user_id column).
+     * Generic method to set the primary key (appointment_id column).
      *
      * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
     {
-        $this->setUserId($key);
+        $this->setAppointmentId($key);
     }
 
     /**
@@ -1199,7 +1249,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getUserId();
+        return null === $this->getAppointmentId();
     }
 
     /**
@@ -1208,34 +1258,21 @@ abstract class User implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \App\Models\User (or compatible) type.
+     * @param      object $copyObj An object of \App\Models\Appointments (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setFirstName($this->getFirstName());
-        $copyObj->setLastName($this->getLastName());
+        $copyObj->setUserId($this->getUserId());
+        $copyObj->setAppointmentDateTime($this->getAppointmentDateTime());
+        $copyObj->setAppointmentDetails($this->getAppointmentDetails());
         $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpdatedAt($this->getUpdatedAt());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getAppointmentss() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAppointments($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setUpatedAt($this->getUpatedAt());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setUserId(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setAppointmentId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1248,7 +1285,7 @@ abstract class User implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \App\Models\User Clone of current object.
+     * @return \App\Models\Appointments Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1261,245 +1298,55 @@ abstract class User implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildUser object.
      *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Appointments' == $relationName) {
-            return $this->initAppointmentss();
-        }
-    }
-
-    /**
-     * Clears out the collAppointmentss collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addAppointmentss()
-     */
-    public function clearAppointmentss()
-    {
-        $this->collAppointmentss = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collAppointmentss collection loaded partially.
-     */
-    public function resetPartialAppointmentss($v = true)
-    {
-        $this->collAppointmentssPartial = $v;
-    }
-
-    /**
-     * Initializes the collAppointmentss collection.
-     *
-     * By default this just sets the collAppointmentss collection to an empty array (like clearcollAppointmentss());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initAppointmentss($overrideExisting = true)
-    {
-        if (null !== $this->collAppointmentss && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = AppointmentsTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collAppointmentss = new $collectionClassName;
-        $this->collAppointmentss->setModel('\App\Models\Appointments');
-    }
-
-    /**
-     * Gets an array of ChildAppointments objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUser is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildAppointments[] List of ChildAppointments objects
+     * @param  ChildUser $v
+     * @return $this|\App\Models\Appointments The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getAppointmentss(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function setUser(ChildUser $v = null)
     {
-        $partial = $this->collAppointmentssPartial && !$this->isNew();
-        if (null === $this->collAppointmentss || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collAppointmentss) {
-                // return empty collection
-                $this->initAppointmentss();
-            } else {
-                $collAppointmentss = ChildAppointmentsQuery::create(null, $criteria)
-                    ->filterByUser($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collAppointmentssPartial && count($collAppointmentss)) {
-                        $this->initAppointmentss(false);
-
-                        foreach ($collAppointmentss as $obj) {
-                            if (false == $this->collAppointmentss->contains($obj)) {
-                                $this->collAppointmentss->append($obj);
-                            }
-                        }
-
-                        $this->collAppointmentssPartial = true;
-                    }
-
-                    return $collAppointmentss;
-                }
-
-                if ($partial && $this->collAppointmentss) {
-                    foreach ($this->collAppointmentss as $obj) {
-                        if ($obj->isNew()) {
-                            $collAppointmentss[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collAppointmentss = $collAppointmentss;
-                $this->collAppointmentssPartial = false;
-            }
+        if ($v === null) {
+            $this->setUserId(NULL);
+        } else {
+            $this->setUserId($v->getUserId());
         }
 
-        return $this->collAppointmentss;
-    }
+        $this->aUser = $v;
 
-    /**
-     * Sets a collection of ChildAppointments objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $appointmentss A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function setAppointmentss(Collection $appointmentss, ConnectionInterface $con = null)
-    {
-        /** @var ChildAppointments[] $appointmentssToDelete */
-        $appointmentssToDelete = $this->getAppointmentss(new Criteria(), $con)->diff($appointmentss);
-
-
-        $this->appointmentssScheduledForDeletion = $appointmentssToDelete;
-
-        foreach ($appointmentssToDelete as $appointmentsRemoved) {
-            $appointmentsRemoved->setUser(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUser object, it will not be re-added.
+        if ($v !== null) {
+            $v->addAppointments($this);
         }
 
-        $this->collAppointmentss = null;
-        foreach ($appointmentss as $appointments) {
-            $this->addAppointments($appointments);
-        }
-
-        $this->collAppointmentss = $appointmentss;
-        $this->collAppointmentssPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related Appointments objects.
+     * Get the associated ChildUser object
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Appointments objects.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildUser The associated ChildUser object.
      * @throws PropelException
      */
-    public function countAppointmentss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function getUser(ConnectionInterface $con = null)
     {
-        $partial = $this->collAppointmentssPartial && !$this->isNew();
-        if (null === $this->collAppointmentss || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collAppointmentss) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getAppointmentss());
-            }
-
-            $query = ChildAppointmentsQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUser($this)
-                ->count($con);
+        if ($this->aUser === null && ($this->user_id !== null)) {
+            $this->aUser = ChildUserQuery::create()->findPk($this->user_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aUser->addAppointmentss($this);
+             */
         }
 
-        return count($this->collAppointmentss);
-    }
-
-    /**
-     * Method called to associate a ChildAppointments object to this object
-     * through the ChildAppointments foreign key attribute.
-     *
-     * @param  ChildAppointments $l ChildAppointments
-     * @return $this|\App\Models\User The current object (for fluent API support)
-     */
-    public function addAppointments(ChildAppointments $l)
-    {
-        if ($this->collAppointmentss === null) {
-            $this->initAppointmentss();
-            $this->collAppointmentssPartial = true;
-        }
-
-        if (!$this->collAppointmentss->contains($l)) {
-            $this->doAddAppointments($l);
-
-            if ($this->appointmentssScheduledForDeletion and $this->appointmentssScheduledForDeletion->contains($l)) {
-                $this->appointmentssScheduledForDeletion->remove($this->appointmentssScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildAppointments $appointments The ChildAppointments object to add.
-     */
-    protected function doAddAppointments(ChildAppointments $appointments)
-    {
-        $this->collAppointmentss[]= $appointments;
-        $appointments->setUser($this);
-    }
-
-    /**
-     * @param  ChildAppointments $appointments The ChildAppointments object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function removeAppointments(ChildAppointments $appointments)
-    {
-        if ($this->getAppointmentss()->contains($appointments)) {
-            $pos = $this->collAppointmentss->search($appointments);
-            $this->collAppointmentss->remove($pos);
-            if (null === $this->appointmentssScheduledForDeletion) {
-                $this->appointmentssScheduledForDeletion = clone $this->collAppointmentss;
-                $this->appointmentssScheduledForDeletion->clear();
-            }
-            $this->appointmentssScheduledForDeletion[]= clone $appointments;
-            $appointments->setUser(null);
-        }
-
-        return $this;
+        return $this->aUser;
     }
 
     /**
@@ -1509,11 +1356,15 @@ abstract class User implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aUser) {
+            $this->aUser->removeAppointments($this);
+        }
+        $this->appointment_id = null;
         $this->user_id = null;
-        $this->first_name = null;
-        $this->last_name = null;
+        $this->appointment_date_time = null;
+        $this->appointment_details = null;
         $this->created_at = null;
-        $this->updated_at = null;
+        $this->upated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1532,14 +1383,9 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collAppointmentss) {
-                foreach ($this->collAppointmentss as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collAppointmentss = null;
+        $this->aUser = null;
     }
 
     /**
@@ -1549,7 +1395,7 @@ abstract class User implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(UserTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(AppointmentsTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**
