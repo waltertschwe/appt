@@ -30,6 +30,7 @@ CREATE TABLE `appointments`
     `appointment_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `appointment_date_time` VARCHAR(255) NOT NULL,
+    `appointment_details` VARCHAR(255) NOT NULL,
     `created_at` DATETIME NOT NULL,
     `upated_at` DATETIME,
     PRIMARY KEY (`appointment_id`),

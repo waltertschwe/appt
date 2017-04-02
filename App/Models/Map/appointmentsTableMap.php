@@ -59,7 +59,7 @@ class appointmentsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class appointmentsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the appointment_id field
@@ -85,6 +85,11 @@ class appointmentsTableMap extends TableMap
      * the column name for the appointment_date_time field
      */
     const COL_APPOINTMENT_DATE_TIME = 'appointments.appointment_date_time';
+
+    /**
+     * the column name for the appointment_details field
+     */
+    const COL_APPOINTMENT_DETAILS = 'appointments.appointment_details';
 
     /**
      * the column name for the created_at field
@@ -108,11 +113,11 @@ class appointmentsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('AppointmentId', 'UserId', 'AppointmentDateTime', 'CreatedAt', 'UpatedAt', ),
-        self::TYPE_CAMELNAME     => array('appointmentId', 'userId', 'appointmentDateTime', 'createdAt', 'upatedAt', ),
-        self::TYPE_COLNAME       => array(appointmentsTableMap::COL_APPOINTMENT_ID, appointmentsTableMap::COL_USER_ID, appointmentsTableMap::COL_APPOINTMENT_DATE_TIME, appointmentsTableMap::COL_CREATED_AT, appointmentsTableMap::COL_UPATED_AT, ),
-        self::TYPE_FIELDNAME     => array('appointment_id', 'user_id', 'appointment_date_time', 'created_at', 'upated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('AppointmentId', 'UserId', 'AppointmentDateTime', 'AppointmentDetails', 'CreatedAt', 'UpatedAt', ),
+        self::TYPE_CAMELNAME     => array('appointmentId', 'userId', 'appointmentDateTime', 'appointmentDetails', 'createdAt', 'upatedAt', ),
+        self::TYPE_COLNAME       => array(appointmentsTableMap::COL_APPOINTMENT_ID, appointmentsTableMap::COL_USER_ID, appointmentsTableMap::COL_APPOINTMENT_DATE_TIME, appointmentsTableMap::COL_APPOINTMENT_DETAILS, appointmentsTableMap::COL_CREATED_AT, appointmentsTableMap::COL_UPATED_AT, ),
+        self::TYPE_FIELDNAME     => array('appointment_id', 'user_id', 'appointment_date_time', 'appointment_details', 'created_at', 'upated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -122,11 +127,11 @@ class appointmentsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('AppointmentId' => 0, 'UserId' => 1, 'AppointmentDateTime' => 2, 'CreatedAt' => 3, 'UpatedAt' => 4, ),
-        self::TYPE_CAMELNAME     => array('appointmentId' => 0, 'userId' => 1, 'appointmentDateTime' => 2, 'createdAt' => 3, 'upatedAt' => 4, ),
-        self::TYPE_COLNAME       => array(appointmentsTableMap::COL_APPOINTMENT_ID => 0, appointmentsTableMap::COL_USER_ID => 1, appointmentsTableMap::COL_APPOINTMENT_DATE_TIME => 2, appointmentsTableMap::COL_CREATED_AT => 3, appointmentsTableMap::COL_UPATED_AT => 4, ),
-        self::TYPE_FIELDNAME     => array('appointment_id' => 0, 'user_id' => 1, 'appointment_date_time' => 2, 'created_at' => 3, 'upated_at' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('AppointmentId' => 0, 'UserId' => 1, 'AppointmentDateTime' => 2, 'AppointmentDetails' => 3, 'CreatedAt' => 4, 'UpatedAt' => 5, ),
+        self::TYPE_CAMELNAME     => array('appointmentId' => 0, 'userId' => 1, 'appointmentDateTime' => 2, 'appointmentDetails' => 3, 'createdAt' => 4, 'upatedAt' => 5, ),
+        self::TYPE_COLNAME       => array(appointmentsTableMap::COL_APPOINTMENT_ID => 0, appointmentsTableMap::COL_USER_ID => 1, appointmentsTableMap::COL_APPOINTMENT_DATE_TIME => 2, appointmentsTableMap::COL_APPOINTMENT_DETAILS => 3, appointmentsTableMap::COL_CREATED_AT => 4, appointmentsTableMap::COL_UPATED_AT => 5, ),
+        self::TYPE_FIELDNAME     => array('appointment_id' => 0, 'user_id' => 1, 'appointment_date_time' => 2, 'appointment_details' => 3, 'created_at' => 4, 'upated_at' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -149,6 +154,7 @@ class appointmentsTableMap extends TableMap
         $this->addPrimaryKey('appointment_id', 'AppointmentId', 'INTEGER', true, null, null);
         $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'users', 'user_id', true, null, null);
         $this->addColumn('appointment_date_time', 'AppointmentDateTime', 'VARCHAR', true, 255, null);
+        $this->addColumn('appointment_details', 'AppointmentDetails', 'VARCHAR', true, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', true, null, null);
         $this->addColumn('upated_at', 'UpatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -311,12 +317,14 @@ class appointmentsTableMap extends TableMap
             $criteria->addSelectColumn(appointmentsTableMap::COL_APPOINTMENT_ID);
             $criteria->addSelectColumn(appointmentsTableMap::COL_USER_ID);
             $criteria->addSelectColumn(appointmentsTableMap::COL_APPOINTMENT_DATE_TIME);
+            $criteria->addSelectColumn(appointmentsTableMap::COL_APPOINTMENT_DETAILS);
             $criteria->addSelectColumn(appointmentsTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(appointmentsTableMap::COL_UPATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.appointment_id');
             $criteria->addSelectColumn($alias . '.user_id');
             $criteria->addSelectColumn($alias . '.appointment_date_time');
+            $criteria->addSelectColumn($alias . '.appointment_details');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.upated_at');
         }

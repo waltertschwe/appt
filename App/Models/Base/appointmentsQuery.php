@@ -23,12 +23,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildappointmentsQuery orderByAppointmentId($order = Criteria::ASC) Order by the appointment_id column
  * @method     ChildappointmentsQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method     ChildappointmentsQuery orderByAppointmentDateTime($order = Criteria::ASC) Order by the appointment_date_time column
+ * @method     ChildappointmentsQuery orderByAppointmentDetails($order = Criteria::ASC) Order by the appointment_details column
  * @method     ChildappointmentsQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildappointmentsQuery orderByUpatedAt($order = Criteria::ASC) Order by the upated_at column
  *
  * @method     ChildappointmentsQuery groupByAppointmentId() Group by the appointment_id column
  * @method     ChildappointmentsQuery groupByUserId() Group by the user_id column
  * @method     ChildappointmentsQuery groupByAppointmentDateTime() Group by the appointment_date_time column
+ * @method     ChildappointmentsQuery groupByAppointmentDetails() Group by the appointment_details column
  * @method     ChildappointmentsQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildappointmentsQuery groupByUpatedAt() Group by the upated_at column
  *
@@ -58,6 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     Childappointments findOneByAppointmentId(int $appointment_id) Return the first Childappointments filtered by the appointment_id column
  * @method     Childappointments findOneByUserId(int $user_id) Return the first Childappointments filtered by the user_id column
  * @method     Childappointments findOneByAppointmentDateTime(string $appointment_date_time) Return the first Childappointments filtered by the appointment_date_time column
+ * @method     Childappointments findOneByAppointmentDetails(string $appointment_details) Return the first Childappointments filtered by the appointment_details column
  * @method     Childappointments findOneByCreatedAt(string $created_at) Return the first Childappointments filtered by the created_at column
  * @method     Childappointments findOneByUpatedAt(string $upated_at) Return the first Childappointments filtered by the upated_at column *
 
@@ -67,6 +70,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     Childappointments requireOneByAppointmentId(int $appointment_id) Return the first Childappointments filtered by the appointment_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     Childappointments requireOneByUserId(int $user_id) Return the first Childappointments filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     Childappointments requireOneByAppointmentDateTime(string $appointment_date_time) Return the first Childappointments filtered by the appointment_date_time column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     Childappointments requireOneByAppointmentDetails(string $appointment_details) Return the first Childappointments filtered by the appointment_details column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     Childappointments requireOneByCreatedAt(string $created_at) Return the first Childappointments filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     Childappointments requireOneByUpatedAt(string $upated_at) Return the first Childappointments filtered by the upated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -74,6 +78,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     Childappointments[]|ObjectCollection findByAppointmentId(int $appointment_id) Return Childappointments objects filtered by the appointment_id column
  * @method     Childappointments[]|ObjectCollection findByUserId(int $user_id) Return Childappointments objects filtered by the user_id column
  * @method     Childappointments[]|ObjectCollection findByAppointmentDateTime(string $appointment_date_time) Return Childappointments objects filtered by the appointment_date_time column
+ * @method     Childappointments[]|ObjectCollection findByAppointmentDetails(string $appointment_details) Return Childappointments objects filtered by the appointment_details column
  * @method     Childappointments[]|ObjectCollection findByCreatedAt(string $created_at) Return Childappointments objects filtered by the created_at column
  * @method     Childappointments[]|ObjectCollection findByUpatedAt(string $upated_at) Return Childappointments objects filtered by the upated_at column
  * @method     Childappointments[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -174,7 +179,7 @@ abstract class appointmentsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT appointment_id, user_id, appointment_date_time, created_at, upated_at FROM appointments WHERE appointment_id = :p0';
+        $sql = 'SELECT appointment_id, user_id, appointment_date_time, appointment_details, created_at, upated_at FROM appointments WHERE appointment_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -371,6 +376,31 @@ abstract class appointmentsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(appointmentsTableMap::COL_APPOINTMENT_DATE_TIME, $appointmentDateTime, $comparison);
+    }
+
+    /**
+     * Filter the query on the appointment_details column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByAppointmentDetails('fooValue');   // WHERE appointment_details = 'fooValue'
+     * $query->filterByAppointmentDetails('%fooValue%', Criteria::LIKE); // WHERE appointment_details LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $appointmentDetails The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildappointmentsQuery The current query, for fluid interface
+     */
+    public function filterByAppointmentDetails($appointmentDetails = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($appointmentDetails)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(appointmentsTableMap::COL_APPOINTMENT_DETAILS, $appointmentDetails, $comparison);
     }
 
     /**

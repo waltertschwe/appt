@@ -26,7 +26,8 @@ class AppointmentService
 	public function handleCreate( $data ) {
 		$appointment = new Appointment();
 		
-		$appointment->set
+		$appointment->setUserId(1);
+		$appointment->appointmentDateTime($data["date-range"]);
 	}	
 		
 }

@@ -85,6 +85,13 @@ abstract class appointments implements ActiveRecordInterface
     protected $appointment_date_time;
 
     /**
+     * The value for the appointment_details field.
+     *
+     * @var        string
+     */
+    protected $appointment_details;
+
+    /**
      * The value for the created_at field.
      *
      * @var        DateTime
@@ -367,6 +374,16 @@ abstract class appointments implements ActiveRecordInterface
     }
 
     /**
+     * Get the [appointment_details] column value.
+     *
+     * @return string
+     */
+    public function getAppointmentDetails()
+    {
+        return $this->appointment_details;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -471,6 +488,26 @@ abstract class appointments implements ActiveRecordInterface
     } // setAppointmentDateTime()
 
     /**
+     * Set the value of [appointment_details] column.
+     *
+     * @param string $v new value
+     * @return $this|\App\Models\appointments The current object (for fluent API support)
+     */
+    public function setAppointmentDetails($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->appointment_details !== $v) {
+            $this->appointment_details = $v;
+            $this->modifiedColumns[appointmentsTableMap::COL_APPOINTMENT_DETAILS] = true;
+        }
+
+        return $this;
+    } // setAppointmentDetails()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
@@ -555,13 +592,16 @@ abstract class appointments implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : appointmentsTableMap::translateFieldName('AppointmentDateTime', TableMap::TYPE_PHPNAME, $indexType)];
             $this->appointment_date_time = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : appointmentsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : appointmentsTableMap::translateFieldName('AppointmentDetails', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->appointment_details = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : appointmentsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : appointmentsTableMap::translateFieldName('UpatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : appointmentsTableMap::translateFieldName('UpatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -574,7 +614,7 @@ abstract class appointments implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = appointmentsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = appointmentsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\appointments'), 0, $e);
@@ -800,6 +840,9 @@ abstract class appointments implements ActiveRecordInterface
         if ($this->isColumnModified(appointmentsTableMap::COL_APPOINTMENT_DATE_TIME)) {
             $modifiedColumns[':p' . $index++]  = 'appointment_date_time';
         }
+        if ($this->isColumnModified(appointmentsTableMap::COL_APPOINTMENT_DETAILS)) {
+            $modifiedColumns[':p' . $index++]  = 'appointment_details';
+        }
         if ($this->isColumnModified(appointmentsTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
@@ -825,6 +868,9 @@ abstract class appointments implements ActiveRecordInterface
                         break;
                     case 'appointment_date_time':
                         $stmt->bindValue($identifier, $this->appointment_date_time, PDO::PARAM_STR);
+                        break;
+                    case 'appointment_details':
+                        $stmt->bindValue($identifier, $this->appointment_details, PDO::PARAM_STR);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -904,9 +950,12 @@ abstract class appointments implements ActiveRecordInterface
                 return $this->getAppointmentDateTime();
                 break;
             case 3:
-                return $this->getCreatedAt();
+                return $this->getAppointmentDetails();
                 break;
             case 4:
+                return $this->getCreatedAt();
+                break;
+            case 5:
                 return $this->getUpatedAt();
                 break;
             default:
@@ -942,15 +991,16 @@ abstract class appointments implements ActiveRecordInterface
             $keys[0] => $this->getAppointmentId(),
             $keys[1] => $this->getUserId(),
             $keys[2] => $this->getAppointmentDateTime(),
-            $keys[3] => $this->getCreatedAt(),
-            $keys[4] => $this->getUpatedAt(),
+            $keys[3] => $this->getAppointmentDetails(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpatedAt(),
         );
-        if ($result[$keys[3]] instanceof \DateTime) {
-            $result[$keys[3]] = $result[$keys[3]]->format('c');
-        }
-
         if ($result[$keys[4]] instanceof \DateTime) {
             $result[$keys[4]] = $result[$keys[4]]->format('c');
+        }
+
+        if ($result[$keys[5]] instanceof \DateTime) {
+            $result[$keys[5]] = $result[$keys[5]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1018,9 +1068,12 @@ abstract class appointments implements ActiveRecordInterface
                 $this->setAppointmentDateTime($value);
                 break;
             case 3:
-                $this->setCreatedAt($value);
+                $this->setAppointmentDetails($value);
                 break;
             case 4:
+                $this->setCreatedAt($value);
+                break;
+            case 5:
                 $this->setUpatedAt($value);
                 break;
         } // switch()
@@ -1059,10 +1112,13 @@ abstract class appointments implements ActiveRecordInterface
             $this->setAppointmentDateTime($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCreatedAt($arr[$keys[3]]);
+            $this->setAppointmentDetails($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUpatedAt($arr[$keys[4]]);
+            $this->setCreatedAt($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setUpatedAt($arr[$keys[5]]);
         }
     }
 
@@ -1113,6 +1169,9 @@ abstract class appointments implements ActiveRecordInterface
         }
         if ($this->isColumnModified(appointmentsTableMap::COL_APPOINTMENT_DATE_TIME)) {
             $criteria->add(appointmentsTableMap::COL_APPOINTMENT_DATE_TIME, $this->appointment_date_time);
+        }
+        if ($this->isColumnModified(appointmentsTableMap::COL_APPOINTMENT_DETAILS)) {
+            $criteria->add(appointmentsTableMap::COL_APPOINTMENT_DETAILS, $this->appointment_details);
         }
         if ($this->isColumnModified(appointmentsTableMap::COL_CREATED_AT)) {
             $criteria->add(appointmentsTableMap::COL_CREATED_AT, $this->created_at);
@@ -1208,6 +1267,7 @@ abstract class appointments implements ActiveRecordInterface
     {
         $copyObj->setUserId($this->getUserId());
         $copyObj->setAppointmentDateTime($this->getAppointmentDateTime());
+        $copyObj->setAppointmentDetails($this->getAppointmentDetails());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpatedAt($this->getUpatedAt());
         if ($makeNew) {
@@ -1302,6 +1362,7 @@ abstract class appointments implements ActiveRecordInterface
         $this->appointment_id = null;
         $this->user_id = null;
         $this->appointment_date_time = null;
+        $this->appointment_details = null;
         $this->created_at = null;
         $this->upated_at = null;
         $this->alreadyInSave = false;
