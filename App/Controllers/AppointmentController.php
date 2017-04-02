@@ -42,7 +42,9 @@ class AppointmentController
 	 * 
 	*/
 	public function getAppointments($request, $response) {
-		$response = $this->view->render( $response, "appointment-index.phtml" );	
+		$appointments = $this->appt_service->getAllAppointments();
+		
+		$response = $this->view->render( $response, "appointment-index.phtml", [ "appts" => $appointments ] );	
 		return $response;
 	}
 	

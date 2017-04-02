@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\Models\Appointments;
-use App\Models\AppointmentQuery;
+use App\Models\AppointmentsQuery;
+use App\Models\UserQuery;
 
 class AppointmentService
 {
@@ -26,6 +27,8 @@ class AppointmentService
 	public function handleCreate( $data ) {
 		$appointment = new Appointments();
 		
+		// TODO: foreign key for user hardcoded to first user generated
+		// this would switch to the session user when authentication is added
 		$appointment->setUserId(1);
 		$appointment->setAppointmentDateTime( $data["date-range"] );
 		$appointment->setAppointmentDetails( $data["appt-detail"] );
@@ -34,8 +37,21 @@ class AppointmentService
 		$appointment->setCreatedAt($date->getTimestamp());
 		$appointment->setUpdatedAt($date->getTimestamp());
 		
-		
 		$appointment->save();
+	}
+	
+	public function getAllAppointments() {
+		// TODO: hardcoding to the first generated user
+		//would make this dynamic by adding authentication and using session object
+		//$query = new UserQuery();
+		$user = UserQuery::create()->findOneByUserId( 1 );
+		
+		// get all appoinments by users foreign key
+		$appointments = AppointmentsQuery::create()
+			->filterByUser( $user )
+			->find();
+		
+		return $appointments
 	}	
 		
 }

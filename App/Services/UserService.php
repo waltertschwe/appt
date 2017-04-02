@@ -10,7 +10,6 @@ class UserService
 	public function getUser( $args ) {
 		$userId = $args['id'];
 		
-		$query = new UserQuery();
 		$user = UserQuery::create()->findOneByUserId( $userId );
 		
 		// php7 null coalesce operator
@@ -25,7 +24,7 @@ class UserService
 	public function updateUser( $data ) {
 		$userId = $data['user-id'];
 		
-		$query = new UserQuery();
+		// update user
 		$user = UserQuery::create()->findOneByUserId( $userId );
 		
 		$user->setFirstName( $data['first-name'] );
