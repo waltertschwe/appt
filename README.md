@@ -1,16 +1,16 @@
-You enter the application from:
+1. You enter the application from:
 /user/insert-test-user
 
-This will insert a test user into the database and re-direct you to the user
+2. This will insert a test user into the database and re-direct you to the user
 profile page which can be updated:
 /user/profile/{userId}
 
-Create Apppointment:
+3. Create Apppointment:
 /appointment/create
 
-All Appointments:
+4. See All Appointments:
 /appointments
 
-Update Appointment
+5. Update Appointment
 /appointment/{appointmentId}
 
